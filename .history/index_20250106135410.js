@@ -140,8 +140,9 @@ app.post('/submissions', async (req, res) => {
     try {
         const { assignmentId, googleDocsLink, notes, email, status } = req.body;
 
+        // Assume we have a function `getAssignmentMarks` to fetch the assignment marks
         const assignment = await assignmentsCollection.findOne({ _id: new ObjectId(assignmentId) });
-        const assignmentMarks = assignment ? assignment.marks : 0; 
+        const assignmentMarks = assignment ? assignment.marks : 0; // Default to 0 if not available
 
         const newSubmission = {
             assignmentId,
@@ -150,7 +151,7 @@ app.post('/submissions', async (req, res) => {
             notes,
             email,
             status,
-            marks: assignmentMarks, 
+            marks: assignmentMarks, // Add the assignment marks from the fetched data
         };
 
         const result = await submissionsCollection.insertOne(newSubmission);
@@ -164,7 +165,7 @@ app.post('/submissions', async (req, res) => {
 app.get('/submissions', async (req, res) => {
     try {
       const submissions = await submissionsCollection.find().toArray();
-      res.status(200).json(submissions); 
+      res.status(200).json(submissions); // Ensure this sends an array of submissions
     } catch (error) {
       console.error('Error fetching submissions:', error);
       res.status(500).json({ message: 'Failed to fetch submissions.' });
@@ -197,7 +198,7 @@ app.get('/submissions', async (req, res) => {
           $set: {
             obtainMarks: parseInt(marks),
             feedback,
-            status: 'completed' 
+            status: 'completed' // Update status to 'completed'
           }
         }
       );
@@ -213,22 +214,27 @@ app.get('/submissions', async (req, res) => {
     }
   });
   
+// In your backend API (Node.js/Express)
+
+// In your backend API (Node.js/Express)
+// In your backend API (Node.js/Express)
 
 app.get('/submissions', async (req, res) => {
-    const userEmail = req.query.email; 
+    const userEmail = req.query.email; // Get email from query params
     
     if (!userEmail) {
       return res.status(400).json({ error: 'Email is required' });
     }
     
     try {
+      // Query the database for submissions where email matches userEmail
       const submissions = await Submission.find({ email: userEmail });
       
       if (submissions.length === 0) {
         return res.status(404).json({ error: 'No attempted assignments found.' });
       }
       
-      res.json(submissions); 
+      res.json(submissions); // Send filtered assignments back to frontend
     } catch (error) {
       res.status(500).json({ error: 'Failed to fetch attempted assignments.' });
     }
@@ -237,7 +243,15 @@ app.get('/submissions', async (req, res) => {
   
   
   
+  
+  
+  
 
+
+
+  
+  
+  
 
 
 
